@@ -3,82 +3,84 @@ const { Post, User, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 const sequelize = require('../config/connection');
 
-//Dashboard that displays posts created by users
+// dashboard displaying posts created by logged in users 
 router.get('/', withAuth, (req, res) => {
     Post.findAll({
-        where: {
-            user_id: req.session.user_id
+      where: {
+        // use the ID from the session
+        user_id: req.session.user_id
+      },
+      attributes: [
+        'id',
+        'post_text',
+        'title',
+        'created_at'
+      ],
+      include: [
+        {
+          model: Comment,
+          attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+          include: {
+            model: User,
+            attributes: ['username']
+          }
         },
-        attributes: [
-            'id',
-            'post_text',
-            'title',
-            'created_at'
-        ],
-        include: [
-            {
-              model: Comment,
-              attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-              include: {
-                  model: User,
-                  attributes: ['username']
-              }
-            },
-            {
-                model: User,
-                attributes: ['username']
-            }
-        ]
+        {
+          model: User,
+          attributes: ['username']
+        }
+      ]
     })
-    .then(dbPostData => {
+      .then(dbPostData => {
+        // serialize data before passing to template
         const posts = dbPostData.map(post => post.get({ plain: true }));
-        res.render('dashboard', { posts, loggenIn: true });
-    })
-    .cacth(err => {
+        res.render('dashboard', { posts, loggedIn: true });
+      })
+      .catch(err => {
         console.log(err);
         res.status(500).json(err);
-    });
-});
+      });
+  });
 
-//Edit page
+// rendering edit page
 router.get('/edit/:id', withAuth, (req, res) => {
     Post.findOne({
-        where: {
-        id: req.params.id
-        },
-        attributes: ['id',
-                     'post_text',
-                     'title',
-                     'created_at'
-                ],
-        include: [
-            {
-                model: User,
-                attributes: ['username']
-            },
-            {
-                model: Comment,
-                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-                include: {
-                model: User,
-                attributes: ['username']
-                }
+    where: {
+    id: req.params.id
+    },
+    attributes: ['id', 
+                'post_text', 
+                'title',
+                'created_at'
+            ],
+    include: [
+    {
+        model: User,
+        attributes: ['username']
+    },
+    {
+        model: Comment,
+        attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+        include: {
+        model: User,
+        attributes: ['username']
         }
-        ]
-    })
+    }
+    ]
+})
     .then(dbPostData => {
-        const post = dbPostData.get({ plain: true });
-        res.render('edit-posts', { post, loggenIn: true });
+    const post = dbPostData.get({ plain: true });
+    res.render('edit-post', { post , loggedIn: true }); 
     })
     .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
+    console.log(err);
+    res.status(500).json(err);
     });
 });
 
-//New post page
+// rendering newpost page 
 router.get('/newpost', (req, res) => {
-    res.render('new-posts');
+  res.render('new-posts');
 });
 
 module.exports = router;
