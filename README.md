@@ -15,6 +15,9 @@
   To install this project the user must run mysql -u root -p then source to the database and run npm start to start the server
   ## Usage 
   This app allows users to create, edit, and delete posts. First you must create and account and then login.
+
+![TechBlog](https://user-images.githubusercontent.com/88077451/146690509-49ace45c-f07c-499a-9fac-2eb591840f0d.png)
+
   ## License 
   This project is license under MIT
   ## Contributing 
