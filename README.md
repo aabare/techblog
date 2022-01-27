@@ -16,7 +16,8 @@
   ## Usage 
   This app allows users to create, edit, and delete posts. First you must create and account and then login.
 
-![TechBlog](https://user-images.githubusercontent.com/88077451/146690509-49ace45c-f07c-499a-9fac-2eb591840f0d.png)
+![Screenshot 2022-01-26 191937](https://user-images.githubusercontent.com/88077451/151268766-3d95c0c3-1a1e-46c2-ad31-5c39c73718bc.png)
+
 
   ## License 
   This project is license under MIT
